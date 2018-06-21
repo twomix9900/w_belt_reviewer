@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load static %}
+  <script type="text/javascript" src="{% static 'index/js/index.js' %}"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>Books</title>
+</head>
+
+<nav>
+  <div class="nav-wrapper teal">
+    <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}}</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li>        
+        <form action="/book/add/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Add Book and Review</button>
+        </form>
+      </li>
+      <li>
+        <form action="/logout/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<body>
+  <div class="container">
+<!--  -->
+    <div class="row">
+
+      <div class="col s12 m6">
+        <h4>Recent Book Reviews:</h4>
+        {% for review in first_three_reviews %}
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title"><a href="/book/details/{{review.book.id}}/">{{review.book.title}}</a></span>
+            <p>Rating: {{review.rating}}/5</p>
+            <p>{{review.reviewer.first_name}} says "{{review.text}}"</p>
+            <p>reviewed on: {{review.created_at}}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>     
+
+      <div class="col s12 m6">
+        <h4>Books with Reviews:</h4>
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            {% for book in all_books %}
+              <a href="/book/details/{{book.id}}/"><p>{{book.title}}</a> by {{book.author.first_name}} {{book.author.last_name}}</p>
+            {% endfor%}
+          </div>
+        </div>  
+      </div>   
+    </div>
+<!--  -->
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>
